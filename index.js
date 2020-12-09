@@ -47,6 +47,10 @@ app.get('/callback', async (req, res) => {
     }
 });
 
+app.get('*', async (req, res) => {
+    res.status(404).end();
+});
+
 port = process.env.PORT || 8080;
 
 server.listen(port, async () => {
