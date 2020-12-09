@@ -29,21 +29,29 @@ app.get('/callback', async (req, res) => {
         res.status(403).end();
     }
     else if (code !== undefined) {
-        const data = await axios({
-            method: 'post',
-            url: 'https://accounts.spotify.com/api/token',
-            data: qs.stringify({
-                grant_type: 'authorization_code',
-                code: code,
-                redirect_uri: redirect
-            }),
-            headers: {
-                "Authorization": `Basic ${Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`,
-                "content-type": 'application/x-www-form-urlencoded'
-            }
-        });
+        try {
+            const data = await axios({
+                method: 'post',
+                url: 'https://accounts.spotify.com/api/token',
+                data: qs.stringify({
+                    grant_type: 'authorization_code',
+                    code: code,
+                    redirect_uri: redirect
+                }),
+                headers: {
+                    "Authorization": `Basic ${Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`,
+                    "content-type": 'application/x-www-form-urlencoded'
+                }
+            });
 
-        res.json(data);
+            console.log(data);
+        }
+        catch (error) {
+            console.log(error);
+        }
+        finally {
+            res.end();
+        }
     }
 });
 
