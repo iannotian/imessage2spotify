@@ -23,7 +23,7 @@ app.get('/authorize', async (req, res) => {
 });
 
 app.get('/callback', async (req, res) => {
-    const { code, error } = req.params;
+    const { code, error } = req.query;
 
     const reqConfig = {
         method: 'post',
@@ -48,14 +48,10 @@ app.get('/callback', async (req, res) => {
     else if (code !== undefined) {
         try {
             const data = await axios(reqConfig);
-
-            console.log(data);
+            res.json(data);
         }
         catch (error) {
-            console.log(error);
-        }
-        finally {
-            res.end();
+            res.status(400).send(error);
         }
     }
 });
