@@ -1,0 +1,17 @@
+{
+  "name": "imessage2spotify",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Ian MacFarlane",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6",
+    "prettier": "^2.2.1",
+    "qs": "^6.9.4"
+  }
+}
