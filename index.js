@@ -25,6 +25,20 @@ app.get('/authorize', async (req, res) => {
 app.get('/callback', async (req, res) => {
     const { code, error } = req.params;
 
+    console.table({
+        method: 'post',
+        url: 'https://accounts.spotify.com/api/token',
+        data: qs.stringify({
+            grant_type: 'authorization_code',
+            code: code,
+            redirect_uri: redirect
+        }),
+        headers: {
+            "Authorization": `Basic ${Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`,
+            "content-type": 'application/x-www-form-urlencoded'
+        }
+    });
+
     if (error !== undefined) {
         res.status(403).end();
     }
