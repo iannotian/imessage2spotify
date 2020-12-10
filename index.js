@@ -48,10 +48,11 @@ app.get('/callback', async (req, res) => {
     else if (code !== undefined) {
         try {
             const data = await axios(reqConfig);
+            console.log(data);
             res.json(data);
         }
         catch (error) {
-            res.status(400).send(error);
+            res.status(400).end();
         }
     }
 });
