@@ -10,6 +10,10 @@ const server = require('http').Server(app);
 const redirect = 'https://imessage2spotify.herokuapp.com/callback';
 const client_id_secret_64 = Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64');
 
+app.get('/', async (req, res) => {
+    res.status(200).send("Welcome to imessage2spotify. Valid routes include /authorize, /refresh");
+})
+
 app.get('/add', async (req, res) => {
 
 });
