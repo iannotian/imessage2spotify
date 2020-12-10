@@ -49,7 +49,7 @@ app.get('/callback', async (req, res) => {
         try {
             const data = await axios(reqConfig);
             console.log(data);
-            res.json(data);
+            res.status(200).json(data);
         }
         catch (error) {
             res.status(400).end();
