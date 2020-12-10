@@ -41,23 +41,46 @@ app.get('/callback', async (req, res) => {
         timeout: "5000"
     };
 
-    console.log(reqConfig);
-
     if (error !== undefined) {
         res.status(403).end();
     }
     else if (code !== undefined) {
         try {
             const response = await axios(reqConfig);
-            console.log(response.data);
             res.status(200).json(response.data);
         }
         catch (error) {
             res.status(400).end();
         }
     }
+});
 
-    res.send("hello");
+app.get('/refresh', async (req, res) => {
+    const { token } = req.query;
+
+    const reqConfig = {
+        method: 'post',
+        url: 'https://accounts.spotify.com/api/token',
+        data: qs.stringify({
+            grant_type: 'refresh_token',
+            refresh_token: token
+        }),
+        headers: {
+            "Authorization": `Basic ${client_id_secret_64}`,
+            "content-type": 'application/x-www-form-urlencoded'
+        },
+        timeout: "5000"
+    };
+
+    if (token !== undefined) {
+        try {
+            const response = await axios(reqConfig);
+            res.status(200).json(response.data);
+        }
+        catch (error) {
+            res.status(400).end();
+        }
+    }
 });
 
 app.get('*', async (req, res) => {
