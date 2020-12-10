@@ -23,7 +23,7 @@ app.get('/authorize', async (req, res) => {
     spotifyURL.searchParams.append('client_id', process.env.CLIENT_ID);
     spotifyURL.searchParams.append('response_type', 'code');
     spotifyURL.searchParams.append('redirect_uri', redirect);
-    spotifyURL.searchParams.append('scope', 'playlist-modify-private')
+    spotifyURL.searchParams.append('scope', 'playlist-modify-private playlist-modify-public')
 
     res.redirect(spotifyURL.toString());
 });
