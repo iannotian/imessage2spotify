@@ -8,6 +8,7 @@ const app = express();
 const server = require('http').Server(app);
 
 const redirect = 'https://imessage2spotify.herokuapp.com/callback';
+const client_id_secret_64 = Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64');
 
 app.get('/add', async (req, res) => {
 
@@ -34,7 +35,7 @@ app.get('/callback', async (req, res) => {
             redirect_uri: redirect
         }),
         headers: {
-            "Authorization": `Basic ${Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`,
+            "Authorization": `Basic ${client_id_secret_64}`,
             "content-type": 'application/x-www-form-urlencoded'
         },
         timeout: "5000"
