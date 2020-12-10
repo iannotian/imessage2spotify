@@ -47,14 +47,16 @@ app.get('/callback', async (req, res) => {
     }
     else if (code !== undefined) {
         try {
-            const data = await axios(reqConfig);
-            console.log(data);
-            res.status(200).json(data);
+            const response = await axios(reqConfig);
+            console.log(response.data);
+            res.status(200).json(response.data);
         }
         catch (error) {
             res.status(400).end();
         }
     }
+
+    res.send("hello");
 });
 
 app.get('*', async (req, res) => {
