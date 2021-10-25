@@ -10,9 +10,9 @@ echo "Uploading source maps for version $version!"
 for path in $(find ${GITHUB_WORKSPACE} -name "*.map"); do
   source_map="@$path"
 
-  echo "Uploading source map for $url"
+  echo "Uploading source map $source_map"
 
-  curl --silent --show-error https://api.rollbar.com/api/1/sourcemap \
+  curl --show-error https://api.rollbar.com/api/1/sourcemap \
     -F access_token=$post_server_item \
     -F version=$version \
     -F source_map=$source_map \
