@@ -36,15 +36,13 @@ var rollbar = new Rollbar({
     client: {
       javascript: {
         source_map_enabled: true,
-        code_version: process.env.GIT_REVISION,
+        code_version: process.env.GIT_REVISION || process.env.SOURCE_VERSION,
       },
     },
   },
 });
 
-if (process.env.GIT_REVISION) {
-  console.info("Git SHA:", process.env.GIT_REVISION);
-} else {
+if (!process.env.GIT_REVISION && !process.env.SOURCE_VERSION) {
   rollbar.warn(
     "Git SHA not passed in as Node environment variable. Source maps will not work in Rollbar."
   );
