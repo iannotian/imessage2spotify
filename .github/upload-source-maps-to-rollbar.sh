@@ -7,7 +7,7 @@ echo "Uploading source maps for version $version!"
 
 # We upload a source map for each resulting JavaScript
 # file; the path depends on your build config
-for path in $(find dist -name "*.js"); do
+for path in $(find ${GITHUB_WORKSPACE}/dist -name "*.js"); do
   source_map="@$path.map"
 
   echo "Uploading source map for $url"
