@@ -3,6 +3,8 @@ import got, { OptionsOfJSONResponseBody } from "got";
 import Rollbar from "rollbar";
 
 process.on("uncaughtException", (error) => {
+  console.error(error);
+
   try {
     rollbar.critical(error);
   } finally {
@@ -22,16 +24,31 @@ const allRequiredEnvVarsExist = Object.keys(requiredEnvVarKeys).every(
 );
 
 if (!allRequiredEnvVarsExist) {
-  throw new Error(
-    "process.env is missing required environment variables for the function of this app."
-  );
+  throw new Error("process.env is missing required environment variables.");
 }
 
 var rollbar = new Rollbar({
   accessToken: process.env[requiredEnvVarKeys.ROLLBAR_ACCESS_TOKEN],
   captureUncaught: true,
   captureUnhandledRejections: true,
+  payload: {
+    environment: process.env.NODE_ENV,
+    client: {
+      javascript: {
+        source_map_enabled: true,
+        code_version: process.env.GIT_REVISION,
+      },
+    },
+  },
 });
+
+if (process.env.GIT_REVISION) {
+  console.info("Git SHA:", process.env.GIT_REVISION);
+} else {
+  rollbar.warn(
+    "Git SHA not passed in as Node environment variable. Source maps will not work in Rollbar."
+  );
+}
 
 const app = express();
 const server = require("http").Server(app);

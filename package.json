@@ -5,7 +5,7 @@
   "author": "Ian MacFarlane",
   "license": "MIT",
   "scripts": {
-    "start": "node --enable-source-maps dist/index.js",
+    "start": "GIT_REVISION=$(git rev-parse HEAD) node --enable-source-maps dist/index.js",
     "build": "tsc",
     "postinstall": "npm run build"
   },
