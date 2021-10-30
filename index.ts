@@ -142,6 +142,10 @@ app.get("/refresh", async (req, res) => {
   }
 });
 
+app.get("version", async (_req, res) => {
+  res.status(200).send(process.env.GIT_REVISION || process.env.SOURCE_VERSION);
+});
+
 app.get("*", async (_req, res) => {
   res.status(404).end();
 });
