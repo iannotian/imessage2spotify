@@ -142,7 +142,7 @@ app.get("/refresh", async (req, res) => {
   }
 });
 
-app.get("version", async (_req, res) => {
+app.get("/version", async (_req, res) => {
   res.status(200).send(process.env.SOURCE_VERSION);
 });
 
