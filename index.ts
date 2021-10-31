@@ -36,13 +36,14 @@ var rollbar = new Rollbar({
     client: {
       javascript: {
         source_map_enabled: true,
-        code_version: process.env.GIT_REVISION || process.env.SOURCE_VERSION,
+        code_version:
+          process.env.GIT_REVISION || process.env.HEROKU_SLUG_COMMIT,
       },
     },
   },
 });
 
-if (!process.env.GIT_REVISION && !process.env.SOURCE_VERSION) {
+if (!process.env.GIT_REVISION && !process.env.HEROKU_SLUG_COMMIT) {
   rollbar.warn(
     "Git SHA not passed in as Node environment variable. Source maps will not work in Rollbar."
   );
@@ -143,7 +144,7 @@ app.get("/refresh", async (req, res) => {
 });
 
 app.get("/version", async (_req, res) => {
-  res.status(200).send({ version: process.env.SOURCE_VERSION });
+  res.status(200).send({ version: process.env.HEROKU_SLUG_COMMIT });
 });
 
 app.get("*", async (_req, res) => {
