@@ -98,6 +98,9 @@
 
     // for mikroorm
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+
+    // for ts morph
+    "declaration": true
   }
 }
