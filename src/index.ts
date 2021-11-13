@@ -124,6 +124,7 @@ async function main() {
       headers: {
         Authorization: `Basic ${client_id_secret_64}`,
       },
+      responseType: "json",
     };
 
     try {
@@ -155,6 +156,7 @@ async function main() {
       headers: {
         Authorization: `Basic ${client_id_secret_64}`,
       },
+      responseType: "json",
     };
 
     try {
@@ -197,6 +199,7 @@ async function main() {
       headers: {
         Authorization: `${token_type} ${access_token}`,
       },
+      responseType: "json",
     };
 
     try {
