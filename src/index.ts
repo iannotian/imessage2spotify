@@ -5,6 +5,9 @@ import Rollbar from "rollbar";
 import { Song } from "./entities/songs.entity";
 import dotenv from "dotenv";
 import mikroOrmConfig from "./mikro-orm.config";
+import path from "path";
+import { formatTimeAgo } from "./util";
+import { SpotifyTrack } from "./types";
 
 if (process.env.NODE_ENV !== "production") dotenv.config();
 
@@ -74,6 +77,9 @@ async function main() {
     RequestContext.create(orm?.em, next);
   });
   app.use(express.json());
+
+  app.set("views", path.join(__dirname, "views"));
+  app.set("view engine", "ejs");
 
   app.get("/", async (_req, res) => {
     res.status(200).send({
@@ -165,6 +171,14 @@ async function main() {
     const { playlist_id } = req.params;
 
     if (!token_type || !access_token || !Array.isArray(uris) || !playlist_id) {
+      rollbar.error({
+        message: "Missing parameters in GET /save-to-playlist/:playlist_id",
+        token_type,
+        access_token,
+        uris,
+        playlist_id,
+      });
+
       res
         .status(400)
         .send({
@@ -205,23 +219,6 @@ async function main() {
           wrap(song).assign({ occurrences: song.occurrences + 1 });
         } else {
           // otherwise get the info from spotify and create one in the database
-          interface SpotifyTrack {
-            id: string;
-            name: string;
-            album: {
-              name: string;
-              images: { url: string; height: number; width: number }[];
-              uri: string;
-            };
-            artists: {
-              name: string;
-              uri: string;
-            }[];
-            uri: string;
-            popularity: number;
-            duration_ms: number;
-          }
-
           const spotifyTrackResponse = await got<SpotifyTrack>({
             method: "GET",
             url: `https://api.spotify.com/v1/tracks/${trackId}`,
@@ -238,7 +235,7 @@ async function main() {
             artist: spotifyTrackResponse?.body?.artists
               ?.map((artist) => artist?.name)
               .join(", "),
-            imageUrl: spotifyTrackResponse?.body?.album?.images[0].url,
+            imageUrl: spotifyTrackResponse?.body?.album?.images?.[0].url,
             occurrences: 1,
             title: spotifyTrackResponse?.body?.name,
           });
@@ -257,54 +254,21 @@ async function main() {
   });
 
   app.get("/latest", async (req, res) => {
-    let { limit, offset } = req.query;
-
-    if (typeof limit !== "string" || typeof offset !== "string") {
-      limit = "25";
-      offset = "0";
-    }
-
     const songRepository = orm.em.getRepository(Song);
 
     const latestSentSongs = await songRepository.findAll({
-      limit: parseInt(limit),
-      offset: parseInt(offset),
+      limit: 25,
       orderBy: { updatedAt: "DESC" },
     });
 
-    let staticPayload: string[] = [];
+    const viewData = {
+      tracks: latestSentSongs.map((song: Song) => ({
+        ...song,
+        sharedTimeAgo: formatTimeAgo(song.updatedAt),
+      })),
+    };
 
-    staticPayload.push("<style>");
-    staticPayload.push("body { font-family: sans-serif; }");
-    staticPayload.push(".tracks-list { display: flex; }");
-    staticPayload.push("</style>");
-    staticPayload.push("<head>");
-    staticPayload.push("</head>");
-    staticPayload.push("<body>");
-    staticPayload.push("<h1>Latest shared tracks</h1>");
-    staticPayload.push('<div class="tracks-list">');
-    for (const song of latestSentSongs) {
-      staticPayload.push(
-        `<div class="track-wrapper">
-        <div class="track-image">
-          <img src=${song.imageUrl} />
-        </div>
-        <div class="track-details">
-          <p class="track-title">${song.title}</p>
-          <p class="track-artist">${song.artist}</p>
-          <p class="track-album">${song.album}</p>
-        </div>
-        <div class="share-details">
-          <p>Last shared ${song.updatedAt.toLocaleString()}, total ${
-          song.occurrences
-        }x</p>
-        </div>`
-      );
-    }
-    staticPayload.push("</div>");
-    staticPayload.push("</body>");
-
-    res.status(200).send(staticPayload.join(""));
+    res.render("latest", viewData);
   });
 
   app.get("/version", async (_req, res) => {

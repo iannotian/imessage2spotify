@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+  integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+<html>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #181818;
+      /* background-image: linear-gradient(62deg, #8ec5fc 0%, #e0c3fc 100%); */
+
+      background-repeat: no-repeat;
+      margin: 2vh 2vw 2vh 2vw;
+      min-height: 100vh;
+      width: 100vw;
+      color: white;
+    }
+    h1 {
+      font-size: medium;
+      color: gray;
+      font-weight: lighter;
+    }
+    .track-list {
+      max-width: calc(100% - 4vw);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      padding: 0;
+      row-gap: 2vh;
+      column-gap: 2vw;
+    }
+    .track-list-item {
+      list-style: none;
+    }
+    .track-details * {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .track-image {
+      overflow: hidden;
+      transition: ease-out;
+      transition-duration: 0.1s;
+      aspect-ratio: 1 / 1;
+    }
+    .track-image:hover {
+      transform: scale(1.02);
+      transition: ease-out;
+      transition-duration: 0.1s;
+    }
+    .track-image img {
+      width: 100%;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .track-occurrences {
+      font-size: small;
+      font-weight: lighter;
+      margin-left: auto;
+      display: block;
+    }
+    .track-title {
+      font-size: large;
+      font-weight: bold;
+    }
+    .track-artist {
+      font-size: small;
+      font-weight: bold;
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+    .track-album {
+      font-size: small;
+      font-style: italic;
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+    .track-share-details {
+      font-size: small;
+      color: gray;
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+  </style>
+  <head>
+    <title>iMessage2Spotify - Latest Shared Tracks</title>
+  </head>
+  <body>
+    <h1>IMESSAGE2SPOTIFY – LATEST SHARED TRACKS</h1>
+    <ul class="track-list">
+      <% tracks.forEach(function(track){ %>
+      <li class="track-list-item">
+        <a href="<%= track.spotifyUrl %>">
+          <div class="track-image">
+            <img src="<%= track.imageUrl %>" />
+          </div>
+        </a>
+        <div class="track-details">
+          <p class="track-title">
+            <%= track.title %><span class="track-occurrences"
+              ><%= track.occurrences %>x</span
+            >
+          </p>
+          <p class="track-artist"><%= track.artist %></p>
+          <p class="track-album"><%= track.album %></p>
+          <p class="track-share-details"><%= track.sharedTimeAgo %></p>
+        </div>
+      </li>
+      <% }) %>
+    </ul>
+  </body>
+</html>
