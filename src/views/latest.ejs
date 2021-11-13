@@ -6,6 +6,7 @@
   crossorigin="anonymous"
   referrerpolicy="no-referrer"
 />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <html>
   <style>
     body {
@@ -27,9 +28,9 @@
     .track-list {
       max-width: calc(100% - 4vw);
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       padding: 0;
-      row-gap: 2vh;
+      row-gap: 8vh;
       column-gap: 2vw;
     }
     .track-list-item {
@@ -57,32 +58,41 @@
         0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
     .track-occurrences {
-      font-size: small;
-      font-weight: lighter;
+      font-size: 1rem;
+      padding-top: 0.25rem;
+      padding-bottom: 0.1rem;
       margin-left: auto;
       display: block;
     }
     .track-title {
-      font-size: large;
+      font-size: 1.5rem;
       font-weight: bold;
+      margin-top: 0.5rem;
+      margin-bottom: 0.75rem;
     }
     .track-artist {
-      font-size: small;
+      /* font-size: small; */
       font-weight: bold;
-      margin-top: 0.25rem;
-      margin-bottom: 0.25rem;
+      padding-top: 0.1rem;
+      padding-bottom: 0.1rem;
+      margin-top: 0;
+      margin-bottom: 0;
     }
     .track-album {
-      font-size: small;
+      /* font-size: small; */
       font-style: italic;
-      margin-top: 0.25rem;
-      margin-bottom: 0.25rem;
+      padding-top: 0.1rem;
+      padding-bottom: 0.5rem;
+      margin-top: 0;
+      margin-bottom: 0;
     }
     .track-share-details {
-      font-size: small;
+      /* font-size: small; */
       color: gray;
-      margin-top: 0.25rem;
-      margin-bottom: 0.25rem;
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+      margin-top: 0;
+      margin-bottom: 0;
     }
   </style>
   <head>
@@ -101,7 +111,7 @@
         <div class="track-details">
           <p class="track-title">
             <%= track.title %><span class="track-occurrences"
-              ><%= track.occurrences %>x</span
+              ><%= track.fire %></span
             >
           </p>
           <p class="track-artist"><%= track.artist %></p>

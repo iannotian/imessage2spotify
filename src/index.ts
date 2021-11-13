@@ -265,6 +265,14 @@ async function main() {
       tracks: latestSentSongs.map((song: Song) => ({
         ...song,
         sharedTimeAgo: formatTimeAgo(song.updatedAt),
+        fire:
+          song.occurrences < 2
+            ? "🆕"
+            : song.occurrences < 5
+            ? Array(Math.min(song.occurrences, 4)).fill("🔥").join("")
+            : song.occurrences > 10
+            ? `🥵🥵🥵🥵🥵 x${Math.floor(song.occurrences / 5)}`
+            : "🥵🥵🥵🥵🥵",
       })),
     };
 
