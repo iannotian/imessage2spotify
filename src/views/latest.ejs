@@ -102,11 +102,12 @@
   <body>
     <h1>IMESSAGE2SPOTIFY – LATEST SHARED TRACKS</h1>
     <ul class="track-list">
-      <% tracks.forEach(function(track){ %>
+      <% tracks.forEach(function(track, index){ %>
       <li class="track-list-item">
         <a href="<%= track.spotifyUrl %>">
           <div class="track-image">
-            <img src="<%= track.imageUrl %>" />
+            <img src="<%= track.imageUrl %>" <% if (index > 6) { %>
+            loading="lazy" <% } %> />
           </div>
         </a>
         <div class="track-details">
