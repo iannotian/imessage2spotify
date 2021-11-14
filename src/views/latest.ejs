@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+  integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,700;1,300&display=swap"
+  rel="stylesheet"
+/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<html>
+  <style>
+    body {
+      font-family: "Rubik", sans-serif;
+      background-color: #181818;
+      margin: 2vh 2vw 2vh 2vw;
+      min-height: 100vh;
+      width: 100vw;
+      color: white;
+    }
+    h1 {
+      font-size: medium;
+      color: gray;
+      font-weight: lighter;
+      padding-top: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .track-list {
+      max-width: calc(100% - 4vw);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      padding: 0;
+      row-gap: 8vh;
+      column-gap: 2vw;
+    }
+    .track-list-item {
+      list-style: none;
+    }
+    .track-details * {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .track-image {
+      overflow: hidden;
+      transition: ease-out;
+      transition-duration: 0.1s;
+      aspect-ratio: 1 / 1;
+    }
+    .track-image:hover {
+      transform: scale(1.02);
+      transition: ease-out;
+      transition-duration: 0.1s;
+    }
+    .track-image img {
+      width: 100%;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .track-occurrences {
+      font-size: 1rem;
+      padding-top: 0.25rem;
+      padding-bottom: 0.1rem;
+      margin-left: auto;
+      display: block;
+    }
+    .track-title {
+      font-size: 1.5rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .track-artist {
+      font-weight: bold;
+      padding-top: 0.1rem;
+      padding-bottom: 0.1rem;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .track-album {
+      font-style: italic;
+      padding-top: 0.1rem;
+      padding-bottom: 0.5rem;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .track-share-details {
+      color: gray;
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  </style>
+  <head>
+    <title>iMessage2Spotify - Latest Shared Tracks</title>
+  </head>
+  <body>
+    <h1>IMESSAGE2SPOTIFY – LATEST SHARED TRACKS</h1>
+    <ul class="track-list">
+      <% tracks.forEach(function(track){ %>
+      <li class="track-list-item">
+        <a href="<%= track.spotifyUrl %>">
+          <div class="track-image">
+            <img src="<%= track.imageUrl %>" />
+          </div>
+        </a>
+        <div class="track-details">
+          <p class="track-title">
+            <%= track.title %><span class="track-occurrences"
+              ><%= track.fire %></span
+            >
+          </p>
+          <p class="track-artist"><%= track.artist %></p>
+          <p class="track-album"><%= track.album %></p>
+          <p class="track-share-details"><%= track.sharedTimeAgo %></p>
+        </div>
+      </li>
+      <% }) %>
+    </ul>
+  </body>
+</html>
