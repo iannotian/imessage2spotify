@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+  integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,700;1,300&display=swap"
+  rel="stylesheet"
+/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<html>
+  <style>
+    body {
+      position: relative;
+      font-family: "Rubik", sans-serif;
+      background-color: #181818;
+      margin: 2vh 2vw 2vh 2vw;
+      min-height: 100vh;
+      width: calc(100vw - 10vw);
+      color: white;
+    }
+    h1 {
+      font-size: medium;
+      color: gray;
+      font-weight: lighter;
+      padding-top: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    textarea {
+      height: 50vh;
+      width: 100%;
+    }
+    p {
+      font-weight: lighter;
+    }
+  </style>
+  <head>
+    <title>iMessage2Spotify - Spotify Token Data</title>
+  </head>
+  <body>
+    <h1>IMESSAGE2SPOTIFY – SPOTIFY TOKEN DATA</h1>
+    <p>✅ Authorization successful! Your authorization tokens are below.
+      Select and copy your token data,
+      then press Done to continue iMessage2Spotify setup.</p>
+    <textarea contenteditable="false" readonly="true" id="token-data"><%= JSON.stringify(data) %></textarea>
+  </body>
+</html>

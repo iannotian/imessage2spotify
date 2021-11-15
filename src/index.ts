@@ -129,8 +129,9 @@ async function main() {
     };
 
     try {
-      const response = await got(reqConfig);
-      res.status(200).json(response.body);
+      const { body } = await got(reqConfig);
+      // res.status(200).json(response.body);
+      res.render("callback", { data: body });
     } catch (error: any) {
       rollbar.error(error, reqConfig);
       res.status(400).end();
