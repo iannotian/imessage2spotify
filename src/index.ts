@@ -8,6 +8,7 @@ import mikroOrmConfig from "./mikro-orm.config";
 import path from "path";
 import { formatTimeAgo } from "./util";
 import { SpotifyTrack } from "./types";
+import ejs from "ejs";
 
 if (process.env.NODE_ENV !== "production") dotenv.config();
 
@@ -63,6 +64,11 @@ async function main() {
 
   const app = express();
   const server = require("http").Server(app);
+
+  const latestPageCache = {
+    valid: false,
+    value: "",
+  };
 
   const redirect_uri =
     process.env.NODE_ENV === "production"
@@ -210,6 +216,8 @@ async function main() {
 
       try {
         // save track to imessage2spotify database
+        latestPageCache.valid = false;
+
         const uri = uris[0] as string;
         const trackId = uri.split(":").pop();
 
@@ -259,6 +267,11 @@ async function main() {
   });
 
   app.get("/latest", async (req, res) => {
+    if (latestPageCache.valid) {
+      res.send(latestPageCache.value);
+      return;
+    }
+
     const songRepository = orm.em.getRepository(Song);
 
     const latestSentSongs = await songRepository.findAll({
@@ -281,7 +294,13 @@ async function main() {
       })),
     };
 
-    res.render("latest", viewData);
+    latestPageCache.value = await ejs.renderFile(
+      `${process.cwd()}/dist/views/latest.ejs`,
+      viewData
+    );
+    latestPageCache.valid = true;
+
+    res.send(latestPageCache.value);
   });
 
   app.get("/version", async (_req, res) => {
