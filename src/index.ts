@@ -64,7 +64,11 @@ async function main() {
   const app = express();
   const server = require("http").Server(app);
 
-  const redirect_uri = "https://imessage2spotify.herokuapp.com/callback";
+  const redirect_uri =
+    process.env.NODE_ENV === "production"
+      ? "https://imessage2spotify.herokuapp.com/callback"
+      : "http://localhost:8080/callback";
+
   const client_id_secret_64 = Buffer.from(
     `${process.env[requiredEnvVarKeys.CLIENT_ID]}:${
       process.env[requiredEnvVarKeys.CLIENT_SECRET]
@@ -82,10 +86,7 @@ async function main() {
   app.set("view engine", "ejs");
 
   app.get("/", async (_req, res) => {
-    res.status(200).send({
-      message:
-        "Welcome to imessage2spotify. Valid routes include /authorize, /refresh",
-    });
+    res.redirect("/latest");
   });
 
   app.get("/authorize", async (_req, res) => {
