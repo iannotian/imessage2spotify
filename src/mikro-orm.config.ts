@@ -1,10 +1,11 @@
 import { MikroORMOptions } from "@mikro-orm/core";
 import { TsMorphMetadataProvider } from "@mikro-orm/reflection";
 import { Song } from "./entities/songs.entity";
+import { Cache } from "./entities/cache.entity";
 
 export default {
   metadataProvider: TsMorphMetadataProvider,
-  entities: [Song],
+  entities: [Song, Cache],
   ...(process.env.NODE_ENV === "production" && {
     clientUrl: process.env.DATABASE_URL,
   }),
