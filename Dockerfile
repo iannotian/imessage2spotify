@@ -1,5 +1,6 @@
-FROM postgres:13-alpine
-WORKDIR /
-EXPOSE 5432
-COPY ./database/seed/init.sql /docker-entrypoint-initdb.d/
-COPY ./database/seed/*.csv /seed/
+FROM node:16.12-alpine
+WORKDIR /app/
+COPY . .
+RUN npm install
+EXPOSE 8080
+CMD ["npm", "run", "start:dev"]
