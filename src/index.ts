@@ -9,7 +9,6 @@ import path from "path";
 import { formatTimeAgo } from "./util";
 import { SpotifyTrack } from "./types";
 import ejs from "ejs";
-import { Cache, CacheType } from "./entities/cache.entity";
 
 if (process.env.NODE_ENV !== "production") dotenv.config();
 
@@ -62,8 +61,6 @@ if (!process.env.GIT_REVISION && !process.env.HEROKU_SLUG_COMMIT) {
 
 async function main() {
   const orm = await MikroORM.init(mikroOrmConfig);
-
-  await orm.em.getConnection().execute("SELECT pg_prewarm('cache');");
 
   const app = express();
   const server = require("http").Server(app);
@@ -219,20 +216,7 @@ async function main() {
 
       try {
         // save track to imessage2spotify database
-
-        try {
-          const cacheRepository = orm.em.getRepository(Cache);
-          const pageLatestCache = await cacheRepository.findOne({
-            cacheType: CacheType.pageLatest,
-          });
-
-          if (pageLatestCache) {
-            wrap(pageLatestCache).assign({ valid: false });
-            await cacheRepository.persistAndFlush(pageLatestCache);
-          }
-        } catch (error) {
-          rollbar.error("error invalidating cache", { error });
-        }
+        latestPageCache.valid = false;
 
         const uri = uris[0] as string;
         const trackId = uri.split(":").pop();
@@ -283,20 +267,9 @@ async function main() {
   });
 
   app.get("/latest", async (req, res) => {
-    const cacheRepository = orm.em.getRepository(Cache);
-
-    let pageLatestCache: Cache | null = null;
-
-    try {
-      pageLatestCache = await cacheRepository.findOne({
-        cacheType: CacheType.pageLatest,
-      });
-      if (pageLatestCache?.valid) {
-        res.send(pageLatestCache?.data);
-        return;
-      }
-    } catch (error) {
-      rollbar.error("error loading cache", { error });
+    if (latestPageCache.valid) {
+      res.send(latestPageCache.value);
+      return;
     }
 
     const songRepository = orm.em.getRepository(Song);
@@ -321,28 +294,13 @@ async function main() {
       })),
     };
 
-    const latest = await ejs.renderFile(
+    latestPageCache.value = await ejs.renderFile(
       `${process.cwd()}/dist/views/latest.ejs`,
       viewData
     );
+    latestPageCache.valid = true;
 
-    try {
-      if (pageLatestCache) {
-        wrap(pageLatestCache).assign({ data: latest, valid: true });
-        cacheRepository.persistAndFlush(pageLatestCache);
-      } else {
-        pageLatestCache = cacheRepository.create({
-          cacheType: CacheType.pageLatest,
-          data: latest,
-        });
-      }
-
-      await cacheRepository.persistAndFlush(pageLatestCache);
-    } catch (error) {
-      rollbar.error("error saving rendered page to cache", { error });
-    }
-
-    res.send(latest);
+    res.send(latestPageCache.value);
   });
 
   app.get("/version", async (_req, res) => {

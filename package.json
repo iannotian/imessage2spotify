@@ -10,7 +10,6 @@
     "start:dev": "nodemon src/index.ts",
     "build": "rimraf dist && tsc --build && copyfiles -u 1 src/views/*.ejs dist",
     "postinstall": "npm run build",
-    "migrate:create": "mikro-orm migration:create",
     "migrate:run": "mikro-orm migration:up",
     "migrate:heroku": "npm run migrate:run",
     "heroku-postbuild": "npm run build && npm run migrate:heroku"
