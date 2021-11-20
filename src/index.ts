@@ -10,8 +10,6 @@ import { formatTimeAgo } from "./util";
 import { SpotifyTrack } from "./types";
 import ejs from "ejs";
 
-if (process.env.NODE_ENV !== "production") dotenv.config();
-
 process.on("uncaughtException", (error) => {
   console.error(error);
 

@@ -12,6 +12,7 @@ export default {
     user: "user",
     password: "password",
     dbName: "imessage2spotify",
+    host: "db",
   }),
   type: "postgresql",
   migrations: {
