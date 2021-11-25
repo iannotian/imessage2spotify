@@ -9,6 +9,7 @@ import path from "path";
 import { formatTimeAgo } from "./util";
 import { SpotifyTrack } from "./types";
 import ejs from "ejs";
+import Redis from "ioredis";
 
 process.on("uncaughtException", (error) => {
   console.error(error);
@@ -58,6 +59,20 @@ if (!process.env.GIT_REVISION && !process.env.HEROKU_SLUG_COMMIT) {
 }
 
 async function main() {
+  const redisLocalConfig: Redis.RedisOptions = {
+    host: process.env.REDIS_HOST,
+    ...(process.env.REDIS_PORT && { port: parseInt(process.env.REDIS_PORT) }),
+    password: process.env.REDIS_PASSWORD,
+  };
+
+  let redis: Redis.Redis;
+
+  if (process.env.NODE_ENV === "production") {
+    redis = new Redis(process.env.REDIS_URL);
+  } else {
+    redis = new Redis(redisLocalConfig);
+  }
+
   const orm = await MikroORM.init(mikroOrmConfig);
 
   const app = express();

@@ -22,6 +22,7 @@ services:
       - "6379:6379"
     env_file:
       - .env
+    command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
       - redis-data:/data
 volumes:
