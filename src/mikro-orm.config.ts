@@ -7,21 +7,19 @@ export default {
   entities: [Song],
   ...(process.env.NODE_ENV === "production" && {
     clientUrl: process.env.DATABASE_URL,
+    driverOptions: {
+      connection: { ssl: { rejectUnauthorized: false } },
+    },
   }),
   ...(process.env.NODE_ENV !== "production" && {
     user: "user",
     password: "password",
     dbName: "imessage2spotify",
-    host: "db",
+    ...(process.env.IN_DOCKER_COMPOSE === "true" && { host: "db" }),
   }),
   type: "postgresql",
   migrations: {
     path: process.cwd() + "/src/migrations",
     disableForeignKeys: false,
   },
-  ...(process.env.NODE_ENV === "production" && {
-    driverOptions: {
-      connection: { ssl: { rejectUnauthorized: false } },
-    },
-  }),
 } as Partial<MikroORMOptions>;

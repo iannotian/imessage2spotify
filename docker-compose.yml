@@ -8,6 +8,8 @@ services:
       - .env
     volumes:
       - ./src:/app/src
+    environment:
+      - "IN_DOCKER_COMPOSE=true"
   db:
     build: ./docker/postgres
     ports:
