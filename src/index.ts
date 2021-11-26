@@ -296,6 +296,7 @@ async function main() {
       tracks: latestSentSongs.map((song: Song) => ({
         ...song,
         sharedTimeAgo: formatTimeAgo(song.updatedAt),
+        sharedTime: song.updatedAt,
         fire:
           song.occurrences < 2
             ? "🆕"

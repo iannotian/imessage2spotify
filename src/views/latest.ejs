@@ -122,7 +122,7 @@
           </p>
           <p class="track-artist"><%= track.artist %></p>
           <p class="track-album"><%= track.album %></p>
-          <p class="track-share-details"><%= track.sharedTimeAgo %></p>
+          <time datetime="<%= track.sharedTime %>" class="track-share-details"><%= track.sharedTimeAgo %></time>
         </div>
       </li>
       <% }) %>
