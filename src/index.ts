@@ -285,10 +285,19 @@ async function main() {
       return;
     }
 
+    let songFetchLimit = 50;
+    try {
+      songFetchLimit = parseInt(req.query?.limit as string);
+    } catch {
+      rollbar.warn("Invalid value for limit: not a parseable number.", {
+        limit: req.query.limit,
+      });
+    }
+
     const songRepository = orm.em.getRepository(Song);
 
     const latestSentSongs = await songRepository.findAll({
-      limit: 25,
+      limit: songFetchLimit,
       orderBy: { updatedAt: "DESC" },
     });
 
