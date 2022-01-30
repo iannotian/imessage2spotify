@@ -280,7 +280,7 @@ async function main() {
   });
 
   app.get("/latest", async (req, res) => {
-    if (latestPageCache.valid) {
+    if (latestPageCache.valid && !req.query.limit) {
       res.send(latestPageCache.value);
       return;
     }
