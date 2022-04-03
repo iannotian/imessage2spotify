@@ -1,4 +1,4 @@
-NOTE: This repository is no longer in use. Please see `imessage2spotify-serverless`.
+NOTE: This repository is no longer in active development. Please see `imessage2spotify-serverless`.
 
 # iMessage2Spotify Server
 
