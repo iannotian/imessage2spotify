@@ -1,3 +1,5 @@
+NOTE: This repository is no longer in use. Please see `imessage2spotify-serverless`.
+
 # iMessage2Spotify Server
 
 This is the source code for iMessage2Spotify's server component. iMessage2Spotify is an iOS Shortcut that depends on this server to save Spotify tracks to a user's account.
