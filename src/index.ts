@@ -268,6 +268,21 @@ async function main() {
         }
 
         await orm.em.persistAndFlush(song);
+
+        if (process.env.NODE_ENV === "production") {
+          await got.post(
+            "https://imessage2spotify.vercel.app/api/legacy/post",
+            {
+              headers: {
+                "x-api-key": process.env
+                  .LEGACY_IMESSAGE2SPOTIFY_API_KEY as string,
+              },
+              json: {
+                ...song.toSpotifyTrack,
+              },
+            }
+          );
+        }
       } catch (error: any) {
         rollbar.error(error, req, reqConfig);
       }

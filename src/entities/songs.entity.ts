@@ -1,7 +1,23 @@
 import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { SpotifyTrack } from "../types";
 
 @Entity({ tableName: "songs" })
 export class Song {
+  get toSpotifyTrack(): SpotifyTrack {
+    const { album, artist, imageUrl, spotifyTrackId, spotifyUrl, title } = this;
+
+    return {
+      album: {
+        images: [{ url: imageUrl }],
+        name: album,
+      },
+      artists: [{ name: artist }],
+      id: spotifyTrackId,
+      uri: spotifyUrl,
+      name: title,
+    };
+  }
+
   @PrimaryKey()
   id!: number;
 

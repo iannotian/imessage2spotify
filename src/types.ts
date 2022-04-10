@@ -3,14 +3,14 @@ export interface SpotifyTrack {
   name: string;
   album: {
     name: string;
-    images: { url: string; height: number; width: number }[];
-    uri: string;
+    images: { url: string; height?: number; width?: number }[];
+    uri?: string;
   };
   artists: {
     name: string;
-    uri: string;
+    uri?: string;
   }[];
   uri: string;
-  popularity: number;
-  duration_ms: number;
+  popularity?: number;
+  duration_ms?: number;
 }
