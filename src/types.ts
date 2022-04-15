@@ -11,6 +11,7 @@ export interface SpotifyTrack {
     uri?: string;
   }[];
   uri: string;
+  preview_url: string | null;
   popularity?: number;
   duration_ms?: number;
 }

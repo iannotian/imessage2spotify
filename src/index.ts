@@ -3,7 +3,6 @@ import express from "express";
 import got, { OptionsOfJSONResponseBody } from "got";
 import Rollbar from "rollbar";
 import { Song } from "./entities/songs.entity";
-import dotenv from "dotenv";
 import mikroOrmConfig from "./mikro-orm.config";
 import path from "path";
 import { formatTimeAgo } from "./util";
@@ -255,17 +254,10 @@ async function main() {
             responseType: "json",
           });
 
-          song = songRepository.create({
-            spotifyTrackId: spotifyTrackResponse?.body?.id,
-            spotifyUrl: spotifyTrackResponse?.body?.uri,
-            album: spotifyTrackResponse?.body?.album?.name,
-            artist: spotifyTrackResponse?.body?.artists
-              ?.map((artist) => artist?.name)
-              .join(", "),
-            imageUrl: spotifyTrackResponse?.body?.album?.images?.[0].url,
-            occurrences: 1,
-            title: spotifyTrackResponse?.body?.name,
-          });
+          song = Song.initFromSpotifyTrack(
+            songRepository,
+            spotifyTrackResponse.body
+          );
         }
 
         await orm.em.persistAndFlush(song);

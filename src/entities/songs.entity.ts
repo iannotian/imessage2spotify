@@ -1,10 +1,41 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  Entity,
+  PrimaryKey,
+  Property,
+  EntityRepository,
+} from "@mikro-orm/core";
 import { SpotifyTrack } from "../types";
 
 @Entity({ tableName: "songs" })
 export class Song {
+  static initFromSpotifyTrack(
+    repository: EntityRepository<Song>,
+    spotifyTrack: SpotifyTrack
+  ): Song {
+    const { id, uri, album, artists, name, preview_url } = spotifyTrack;
+
+    return repository.create({
+      spotifyTrackId: id,
+      spotifyUrl: uri,
+      spotifyPreviewUrl: preview_url,
+      album: album?.name,
+      artist: artists?.map((artist) => artist?.name).join(", "),
+      imageUrl: album?.images?.[0].url,
+      occurrences: 1,
+      title: name,
+    });
+  }
+
   get toSpotifyTrack(): SpotifyTrack {
-    const { album, artist, imageUrl, spotifyTrackId, spotifyUrl, title } = this;
+    const {
+      album,
+      artist,
+      imageUrl,
+      spotifyTrackId,
+      spotifyUrl,
+      title,
+      spotifyPreviewUrl,
+    } = this;
 
     return {
       album: {
@@ -14,6 +45,7 @@ export class Song {
       artists: [{ name: artist }],
       id: spotifyTrackId,
       uri: spotifyUrl,
+      preview_url: spotifyPreviewUrl,
       name: title,
     };
   }
@@ -26,6 +58,9 @@ export class Song {
 
   @Property()
   spotifyUrl!: string;
+
+  @Property()
+  spotifyPreviewUrl!: string | null;
 
   @Property()
   title!: string;
