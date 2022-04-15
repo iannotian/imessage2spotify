@@ -278,7 +278,7 @@ async function main() {
                   .LEGACY_IMESSAGE2SPOTIFY_API_KEY as string,
               },
               json: {
-                ...song.toSpotifyTrack,
+                track: song.toSpotifyTrack,
               },
             }
           );
