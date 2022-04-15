@@ -226,9 +226,10 @@ async function main() {
     try {
       // save track to user's spotify playlist
       const response = await got(reqConfig);
+      res.status(200).json(response.body).end();
 
+      // save track to imessage2spotify database
       try {
-        // save track to imessage2spotify database
         latestPageCache.valid = false;
 
         const uri = uris[0] as string;
@@ -270,6 +271,10 @@ async function main() {
         await orm.em.persistAndFlush(song);
 
         if (process.env.NODE_ENV === "production") {
+          rollbar.info("Attempt: Forwarding song to Next.js app", {
+            song: song.toSpotifyTrack,
+          });
+
           await got.post(
             "https://imessage2spotify.vercel.app/api/legacy/post",
             {
@@ -282,15 +287,20 @@ async function main() {
               },
             }
           );
+
+          rollbar.info("Success: Forwarded song to Next.js app", {});
         }
       } catch (error: any) {
         rollbar.error(error, req, reqConfig);
       }
-
-      res.status(200).json(response.body);
     } catch (error: any) {
-      rollbar.error(error, req, reqConfig);
       res.status(400).end();
+      rollbar.error(
+        "Error: Could not forward song to Next.js app",
+        error,
+        req,
+        reqConfig
+      );
     }
   });
 
